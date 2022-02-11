@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <title>Timer</title>
+</head>
+
+<body>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+
+        .wrapper {
+            background-color: wheat;
+            width: 70vw;
+            height: 100vh;
+            margin: 0 auto;
+            display: grid;
+            place-items: center;
+
+        }
+
+        .display {
+            display: grid;
+            justify-items: center;
+            gap: 10px;
+            font-family: 'Source Code Pro', monospace;
+
+        }
+
+        #timer {
+            background-color: black;
+            color: green;
+            width: 200px;
+            height: 200px;
+            font-size: 40px;
+            border-radius: 10px;
+            box-shadow: 3px 3px 2px darkgray;
+            font-family: inherit;
+        }
+
+        #reset {
+            background-color: purple;
+            color: white;
+            font-size: 15px;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+    </style>
+
+    <div class="wrapper">
+        <div class="display">
+            <button id="timer">25:00</button>
+            <button id="reset">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        let paused = true;
+        let countDown;
+        let secondsLeft;
+
+        const timerButton = document.querySelector('#timer');
+        const resetButton = document.querySelector('#reset');
+
+        function startTimer(timeInSeconds = 1500) {
+            clearInterval(countDown);
+            const nowStamp = Date.now();
+            // display time difference between starting and ending time every second
+            countDown = setInterval(() => {
+                const endStamp = nowStamp + (timeInSeconds * 1000);
+                secondsLeft = Math.floor((endStamp - Date.now()) / 1000);
+                const minutesLeft = Math.floor(secondsLeft / 60);
+                const remainderSeconds = secondsLeft % 60;
+
+                // end when it's done
+                if (remainderSeconds < 0) {
+                    clearInterval(countDown);
+                    return;
+                }
+                // time display on page
+                timerButton.innerText = `${minutesLeft < 10 ? '0' : ''}${minutesLeft}:${remainderSeconds > 9 ? '' : '0'}${remainderSeconds}`;
+            }, 1000);
+        }
+
+        function pauseToggle() {
+            // save seconds remaining when this is paused and pass back into startTimer when it is clicked again
+            let pausedTime = secondsLeft;
+            if (paused) {
+                startTimer(pausedTime);
+                paused = false;
+            } else {
+                clearInterval(countDown);
+                paused = true;
+            }
+        }
+
+        timerButton.addEventListener('click', pauseToggle);
+
+    </script>
+</body>
+
+</html>
