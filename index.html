@@ -74,13 +74,12 @@
         function startTimer(timeInSeconds = 1500) {
             clearInterval(countDown);
             const nowStamp = Date.now();
+            const endStamp = nowStamp + (timeInSeconds * 1000);
             // display time difference between starting and ending time every second
             countDown = setInterval(() => {
-                const endStamp = nowStamp + (timeInSeconds * 1000);
                 secondsLeft = Math.floor((endStamp - Date.now()) / 1000);
                 const minutesLeft = Math.floor(secondsLeft / 60);
                 const remainderSeconds = secondsLeft % 60;
-
                 // end when it's done
                 if (remainderSeconds < 0) {
                     clearInterval(countDown);
@@ -104,6 +103,12 @@
         }
 
         timerButton.addEventListener('click', pauseToggle);
+        resetButton.addEventListener('click', () => {
+            clearInterval(countDown);
+            timerButton.innerText = `25:00`;
+            secondsLeft = 1500;
+            paused = true;
+        });
 
     </script>
 </body>
